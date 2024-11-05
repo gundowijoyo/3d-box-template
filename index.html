@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kotak 3D Berputar</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            perspective: 1000px;
+        }
+
+        .cube {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s; 
+
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 200px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+                        border-radius: 100%;
+        }
+
+        .front  { transform: rotateY(  0deg) translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .right  { transform: rotateY( 90deg) translateZ(100px); }
+        .top    { transform: rotateX( 90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cube">
+            <div class="face front">:-:</div>
+            <div class="face back">Back</div>
+            <div class="face left">Left</div>
+            <div class="face right">Right</div>
+            <div class="face top">Top</div>
+            <div class="face bottom">Bottom</div>
+        </div>
+    </div>
+    <script>
+        let isDragging = false;
+        let lastX = 0;
+        let lastY = 0;
+        let rotateX = 0;
+        let rotateY = 0;
+
+        const cube = document.querySelector('.cube');
+
+        function startDrag(event) {
+            isDragging = true;
+            lastX = event.touches ? event.touches[0].clientX : event.clientX;
+            lastY = event.touches ? event.touches[0].clientY : event.clientY;
+        }
+
+        function drag(event) {
+            if (!isDragging) return;
+
+            const currentX = event.touches ? event.touches[0].clientX : event.clientX;
+            const currentY = event.touches ? event.touches[0].clientY : event.clientY;
+
+            const deltaX = currentX - lastX;
+            const deltaY = currentY - lastY;
+
+            rotateY += deltaX * 0.5;
+            rotateX -= deltaY * 0.5;
+
+            cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+            lastX = currentX;
+            lastY = currentY;
+        }
+
+        function endDrag() {
+            isDragging = false;
+        }
+
+        document.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', endDrag);
+
+        document.addEventListener('touchstart', startDrag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('touchend', endDrag);
+    </script>
+</body>
+</html>
